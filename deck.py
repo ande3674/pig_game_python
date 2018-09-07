@@ -13,10 +13,22 @@ class Deck:
             for suit in self.suits:
                 # build the card string
                 cardString = self.values[i] + ' of ' + suit
-                # this way A = 1, 2 = 2, ..., J = 11, Q = 12, K = 13
-                cardValue = i + 1
+                cardValue = i + 1  # this way A = 1, 2 = 2, ..., J = 11, Q = 12, K = 13 etc
                 # add the card to the deck dictionary
                 self.deck[cardString] = cardValue
 
     def dealCard(self):
         return self.deck.popitem()
+
+    # use this method to deal a hand in the game of pig
+    # hand will contain 4 cards
+    # since the deck is in random order, it doesn't really matter if we deal the classic way,
+    # or if we just give 4 cards in a row to each player :)
+    def dealHand(self):
+        hand = {}
+
+        for i in range(4):
+            cardString, cardValue = self.dealCard()
+            hand[cardString] = cardValue
+
+        return hand
