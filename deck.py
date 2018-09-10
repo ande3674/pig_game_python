@@ -1,3 +1,5 @@
+import random
+
 
 class Deck:
 
@@ -16,6 +18,13 @@ class Deck:
                 cardValue = i + 1  # this way A = 1, 2 = 2, ..., J = 11, Q = 12, K = 13 etc
                 # add the card to the deck dictionary
                 self.deck[cardString] = cardValue
+
+            # randomize the keys of the deck dictionary
+            keys = list(self.deck.keys())
+            random.shuffle(keys)
+
+            # create randomized key-value pairs deck dictionary with randomized keys list
+            self.deck = {key: self.deck[key] for key in keys}
 
     def dealCard(self):
         return self.deck.popitem()
