@@ -13,6 +13,7 @@ def main():
     hum.hand = card_deck.dealHand()
 
     player = "human"
+    discard = card_deck.dealCard()  # deal the next card for the discard pile
 
     while len(card_deck.deck) != 0:
 
@@ -25,17 +26,47 @@ def main():
         elif player == "human" and len(get_matches(hum.hand)) != 4:
             print("Human's hand: " + str(display_hand(hum.hand)))
             print("*No 4 of a kind for human.")
-            print("*Draws a card from the top of the deck.")
-            hum.hand.update({card_deck.dealCard()})
-            print("Human's hand: " + str(display_hand(hum.hand)))
-            player = hum.human_turn()
+
+            print("Discard pile:")
+            display_discard(discard)
             print()
+            choice = input("Enter 'p' to pick up the discard pile, or 'd' to draw a new card: ")
+            print()
+
+            while choice != "d" and choice != "p": # !(choice == "d" or choice == "p")
+                print("Error: invalid choice")
+                choice = input("Enter 'p' to pick up the discard pile, 'd' to draw a new card: ")
+                print()
+
+            if choice == "d":
+                hum.hand.update({card_deck.dealCard()})
+                print("Human's hand: " + str(display_hand(hum.hand)))
+                player, discard = hum.human_turn()
+                print()
+
+            elif choice == "p":
+                #pick up discard pile
+                hum.hand.update({discard})
+                print("Human's hand: " + str(display_hand(hum.hand)))
+                player, discard = hum.human_turn()
+                print()
+
+
         elif player == "computer" and len(get_matches(com.hand)) != 4:
             print("*No 4 of a kind for computer.")
-            print("*Draws a card from the top of the deck.")
-            com.hand.update({card_deck.dealCard()})
-            player = com.computer_turn(get_matches(com.hand))
-            print()
+            print("*Computer plays.")
+            # send discard value to want_discard() method and see if computer wants it...
+            if com.want_discard(discard[1]):
+                # pick up the discard card
+                com.hand.update({discard})
+                player, discard = com.computer_turn(get_matches(com.hand))
+                print()
+
+            # if not - then proceed normally, drawing a new card for the computer
+            else:
+                com.hand.update({card_deck.dealCard()})
+                player, discard = com.computer_turn(get_matches(com.hand))
+                print()
 
     if len(card_deck.deck) == 0:
         print()
@@ -92,6 +123,9 @@ def get_matches(hand):
             matches.append(max_value)
 
     return matches
+
+def display_discard(card):
+    print(card[0])
 
 
 main()

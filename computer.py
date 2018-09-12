@@ -16,8 +16,16 @@ class Computer:
                 if value != matches[0]:
                     no_match_cards.append(key)
             # remove from hand the first value with no matches
-            self.hand.pop(no_match_cards[0])
+            return "human", (no_match_cards[0], self.hand.pop(no_match_cards[0]))
         else:
-            self.hand.popitem()
+            return "human", self.hand.popitem()
 
-        return "human"
+
+    def want_discard(self, discard_val):
+        want = False
+
+        for val in self.hand.values():
+            if val == discard_val:
+                want = True
+
+        return want
